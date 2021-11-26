@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Inlämning 3 - GUI-program\\Assignment3\\Assignment3\\Assignment3.csproj": {}
+    "C:\\DataAccessGUIAssignment\\Assignment3\\Assignment3\\Assignment3.csproj": {}
   },
   "projects": {
-    "C:\\Inlämning 3 - GUI-program\\Assignment3\\Assignment3\\Assignment3.csproj": {
+    "C:\\DataAccessGUIAssignment\\Assignment3\\Assignment3\\Assignment3.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Inlämning 3 - GUI-program\\Assignment3\\Assignment3\\Assignment3.csproj",
+        "projectUniqueName": "C:\\DataAccessGUIAssignment\\Assignment3\\Assignment3\\Assignment3.csproj",
         "projectName": "Assignment3",
-        "projectPath": "C:\\Inlämning 3 - GUI-program\\Assignment3\\Assignment3\\Assignment3.csproj",
+        "projectPath": "C:\\DataAccessGUIAssignment\\Assignment3\\Assignment3\\Assignment3.csproj",
         "packagesPath": "C:\\Users\\46722\\.nuget\\packages\\",
-        "outputPath": "C:\\Inlämning 3 - GUI-program\\Assignment3\\Assignment3\\obj\\",
+        "outputPath": "C:\\DataAccessGUIAssignment\\Assignment3\\Assignment3\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\46722\\AppData\\Roaming\\NuGet\\NuGet.Config",

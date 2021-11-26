@@ -459,11 +459,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Inlämning 3 - GUI-program\\Assignment3\\PopulateDatabase\\PopulateDatabase.csproj",
+      "projectUniqueName": "C:\\DataAccessGUIAssignment\\Assignment3\\PopulateDatabase\\PopulateDatabase.csproj",
       "projectName": "PopulateDatabase",
-      "projectPath": "C:\\Inlämning 3 - GUI-program\\Assignment3\\PopulateDatabase\\PopulateDatabase.csproj",
+      "projectPath": "C:\\DataAccessGUIAssignment\\Assignment3\\PopulateDatabase\\PopulateDatabase.csproj",
       "packagesPath": "C:\\Users\\46722\\.nuget\\packages\\",
-      "outputPath": "C:\\Inlämning 3 - GUI-program\\Assignment3\\PopulateDatabase\\obj\\",
+      "outputPath": "C:\\DataAccessGUIAssignment\\Assignment3\\PopulateDatabase\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\46722\\AppData\\Roaming\\NuGet\\NuGet.Config",

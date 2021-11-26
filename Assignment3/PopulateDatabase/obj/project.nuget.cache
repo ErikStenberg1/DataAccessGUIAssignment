@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "wVLvDg7bp6DmbJ2Gd8VRm3aqJna+EVHSYChMGmgrNoR2P15RjjNvqClsZ31LnbmtQz0J0i/l+JlqA8lpmzhR6g==",
+  "dgSpecHash": "eAtq5kgsqzvRJrC7/Id3CWjNdUc0xrVhtLI2z4gk8lWgLfpqzB6jdwIrfBJlb3/d6ZhLbPfgSeuc0Z+pU6QVNQ==",
   "success": true,
-  "projectFilePath": "C:\\Inlämning 3 - GUI-program\\Assignment3\\PopulateDatabase\\PopulateDatabase.csproj",
+  "projectFilePath": "C:\\DataAccessGUIAssignment\\Assignment3\\PopulateDatabase\\PopulateDatabase.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\46722\\.nuget\\packages\\microsoft.netcore.platforms\\3.1.0\\microsoft.netcore.platforms.3.1.0.nupkg.sha512",
     "C:\\Users\\46722\\.nuget\\packages\\microsoft.win32.registry\\4.7.0\\microsoft.win32.registry.4.7.0.nupkg.sha512",
