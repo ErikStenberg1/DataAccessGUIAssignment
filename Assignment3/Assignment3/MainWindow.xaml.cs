@@ -304,7 +304,7 @@ namespace Assignment3
             }
             using (database = new AppDbContext())
             {
-                string selectedCinema = cinemaListBox.SelectedIndex.ToString();
+                string selectedCinema = cinemaListBox.SelectedItem.ToString();
                 List<Screening> screenings = database.Screening.Where(c => c.Cinema.Name == selectedCinema).Include(m => m.Movie).OrderBy(s => s.Time).ToList();
 
                 // For each screening:
@@ -367,7 +367,7 @@ namespace Assignment3
                     };
                     AddToGrid(grid, titleHeading, 1, 1);
 
-                    var releaseDate = Convert.ToDateTime(screening.Movie.Title);
+                    var releaseDate = Convert.ToDateTime(screening.Movie.ReleaseDate);
                     int runtimeMinutes = Convert.ToInt32(screening.Movie.Runtime);
                     var runtime = TimeSpan.FromMinutes(runtimeMinutes);
                     string runtimeString = runtime.Hours + "h " + runtime.Minutes + "m";
