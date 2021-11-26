@@ -9,7 +9,7 @@ namespace Assignment3.Migrations
         {
             migrationBuilder.AlterColumn<DateTime>(
                 name: "TimePurchased",
-                table: "Tickets",
+                table: "Ticket",
                 type: "datetime",
                 nullable: false,
                 oldClrType: typeof(DateTime),
@@ -17,7 +17,7 @@ namespace Assignment3.Migrations
 
             migrationBuilder.AlterColumn<string>(
                 name: "Title",
-                table: "Movies",
+                table: "Movie",
                 type: "nvarchar(255)",
                 maxLength: 255,
                 nullable: false,
@@ -28,7 +28,7 @@ namespace Assignment3.Migrations
 
             migrationBuilder.AlterColumn<DateTime>(
                 name: "ReleaseDate",
-                table: "Movies",
+                table: "Movie",
                 type: "date",
                 nullable: false,
                 oldClrType: typeof(DateTime),
@@ -36,7 +36,7 @@ namespace Assignment3.Migrations
 
             migrationBuilder.AlterColumn<string>(
                 name: "PosterPath",
-                table: "Movies",
+                table: "Movie",
                 type: "nvarchar(255)",
                 maxLength: 255,
                 nullable: false,
@@ -47,7 +47,7 @@ namespace Assignment3.Migrations
 
             migrationBuilder.AlterColumn<string>(
                 name: "Name",
-                table: "Cinemas",
+                table: "Cinema",
                 type: "nvarchar(255)",
                 maxLength: 255,
                 nullable: false,
@@ -58,7 +58,7 @@ namespace Assignment3.Migrations
 
             migrationBuilder.AlterColumn<string>(
                 name: "City",
-                table: "Cinemas",
+                table: "Cinema",
                 type: "nvarchar(255)",
                 maxLength: 255,
                 nullable: false,
@@ -72,7 +72,7 @@ namespace Assignment3.Migrations
         {
             migrationBuilder.AlterColumn<DateTime>(
                 name: "TimePurchased",
-                table: "Tickets",
+                table: "Ticket",
                 type: "datetime2",
                 nullable: false,
                 oldClrType: typeof(DateTime),
@@ -80,7 +80,7 @@ namespace Assignment3.Migrations
 
             migrationBuilder.AlterColumn<string>(
                 name: "Title",
-                table: "Movies",
+                table: "Movie",
                 type: "nvarchar(max)",
                 nullable: true,
                 oldClrType: typeof(string),
@@ -89,7 +89,7 @@ namespace Assignment3.Migrations
 
             migrationBuilder.AlterColumn<DateTime>(
                 name: "ReleaseDate",
-                table: "Movies",
+                table: "Movie",
                 type: "datetime2",
                 nullable: false,
                 oldClrType: typeof(DateTime),
@@ -97,7 +97,7 @@ namespace Assignment3.Migrations
 
             migrationBuilder.AlterColumn<string>(
                 name: "PosterPath",
-                table: "Movies",
+                table: "Movie",
                 type: "nvarchar(max)",
                 nullable: true,
                 oldClrType: typeof(string),
@@ -106,7 +106,7 @@ namespace Assignment3.Migrations
 
             migrationBuilder.AlterColumn<string>(
                 name: "Name",
-                table: "Cinemas",
+                table: "Cinema",
                 type: "nvarchar(max)",
                 nullable: true,
                 oldClrType: typeof(string),
@@ -115,7 +115,7 @@ namespace Assignment3.Migrations
 
             migrationBuilder.AlterColumn<string>(
                 name: "City",
-                table: "Cinemas",
+                table: "Cinema",
                 type: "nvarchar(max)",
                 nullable: true,
                 oldClrType: typeof(string),

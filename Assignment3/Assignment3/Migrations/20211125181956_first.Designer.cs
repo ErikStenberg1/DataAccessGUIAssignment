@@ -21,7 +21,7 @@ namespace Assignment3.Migrations
                 .HasAnnotation("ProductVersion", "5.0.10")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("Assignment3.Cinemas", b =>
+            modelBuilder.Entity("Assignment3.Cinema", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
@@ -36,10 +36,10 @@ namespace Assignment3.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Cinemas");
+                    b.ToTable("Cinema");
                 });
 
-            modelBuilder.Entity("Assignment3.Movies", b =>
+            modelBuilder.Entity("Assignment3.Movie", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
@@ -60,10 +60,10 @@ namespace Assignment3.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Movies");
+                    b.ToTable("Movie");
                 });
 
-            modelBuilder.Entity("Assignment3.Screenings", b =>
+            modelBuilder.Entity("Assignment3.Screening", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
@@ -85,10 +85,10 @@ namespace Assignment3.Migrations
 
                     b.HasIndex("MovieID");
 
-                    b.ToTable("Screenings");
+                    b.ToTable("Screening");
                 });
 
-            modelBuilder.Entity("Assignment3.Tickets", b =>
+            modelBuilder.Entity("Assignment3.Ticket", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
@@ -105,16 +105,16 @@ namespace Assignment3.Migrations
 
                     b.HasIndex("ScreeningID");
 
-                    b.ToTable("Tickets");
+                    b.ToTable("Ticket");
                 });
 
-            modelBuilder.Entity("Assignment3.Screenings", b =>
+            modelBuilder.Entity("Assignment3.Screening", b =>
                 {
-                    b.HasOne("Assignment3.Cinemas", "Cinema")
+                    b.HasOne("Assignment3.Cinema", "Cinema")
                         .WithMany()
                         .HasForeignKey("CinemaID");
 
-                    b.HasOne("Assignment3.Movies", "Movie")
+                    b.HasOne("Assignment3.Movie", "Movie")
                         .WithMany()
                         .HasForeignKey("MovieID");
 
@@ -123,9 +123,9 @@ namespace Assignment3.Migrations
                     b.Navigation("Movie");
                 });
 
-            modelBuilder.Entity("Assignment3.Tickets", b =>
+            modelBuilder.Entity("Assignment3.Ticket", b =>
                 {
-                    b.HasOne("Assignment3.Screenings", "Screening")
+                    b.HasOne("Assignment3.Screening", "Screening")
                         .WithMany()
                         .HasForeignKey("ScreeningID");
 

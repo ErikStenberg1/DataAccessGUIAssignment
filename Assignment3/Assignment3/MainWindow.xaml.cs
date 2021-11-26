@@ -21,15 +21,15 @@ using Windows.Devices.Geolocation;
 
 namespace Assignment3
 {
-    public class Tickets
+    public class Ticket
     {
         public int ID { get; set; }
         [Required]
-        public Screenings Screening { get; set; }
+        public Screening Screening { get; set; }
         [Column(TypeName= "datetime")]
         public DateTime TimePurchased { get; set; }
     }
-    public class Cinemas
+    public class Cinema
     {
         public int ID { get; set; }
         [Required]
@@ -39,16 +39,16 @@ namespace Assignment3
         [MaxLength(255)]
         public string City { get; set; }
     }
-    public class Screenings
+    public class Screening
     {
         public int ID { get; set; }
         public TimeSpan Time { get; set; }
         [Required]
-        public Movies Movie { get; set; }
+        public Movie Movie { get; set; }
         [Required]
-        public Cinemas Cinema { get; set; }
+        public Cinema Cinema { get; set; }
     }
-    public class Movies
+    public class Movie
     {
         public int ID { get; set; }
         [Required]
@@ -63,10 +63,10 @@ namespace Assignment3
     }
     public class AppDbContext : DbContext
     {
-        public DbSet<Cinemas> Cinemas { get; set; }
-        public DbSet<Tickets> Tickets { get; set; }
-        public DbSet<Screenings> Screenings { get; set; }
-        public DbSet<Movies> Movies { get; set; }
+        public DbSet<Cinema> Cinema { get; set; }
+        public DbSet<Ticket> Ticket { get; set; }
+        public DbSet<Screening> Screening { get; set; }
+        public DbSet<Movie> Movie { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
@@ -74,7 +74,7 @@ namespace Assignment3
         }
         protected override void OnModelCreating(ModelBuilder model)
         {
-            model.Entity<Cinemas>()
+            model.Entity<Cinema>()
             .HasAlternateKey(c => c.Name);
         }
     }
@@ -162,13 +162,13 @@ namespace Assignment3
             cityComboBox.SelectedIndex = 0;
             AddToGrid(grid, cityComboBox, 1, 0);
 
-            // When we select a city, update the GUI with the cinemas in the currently selected city.
+            // When we select a city, update the GUI with the Cinema in the currently selected city.
             cityComboBox.SelectionChanged += (sender, e) =>
             {
                 UpdateCinemaList();
             };
 
-            // Create the dropdown of cinemas.
+            // Create the dropdown of Cinema.
             cinemaListBox = new ListBox
             {
                 Margin = spacing
@@ -176,7 +176,7 @@ namespace Assignment3
             AddToGrid(grid, cinemaListBox, 2, 0);
             UpdateCinemaList();
 
-            // When we select a cinema, update the GUI with the screenings in the currently selected cinema.
+            // When we select a cinema, update the GUI with the Screening in the currently selected cinema.
             cinemaListBox.SelectionChanged += (sender, e) =>
             {
                 UpdateScreeningList();
@@ -230,7 +230,7 @@ namespace Assignment3
 
             var title = new TextBlock
             {
-                Text = "My Tickets",
+                Text = "My Ticket",
                 FontFamily = mainFont,
                 Foreground = Brushes.White,
                 FontSize = 20,
@@ -250,34 +250,37 @@ namespace Assignment3
             };
             scroll.Content = ticketPanel;
 
-            // Update the GUI with the initial list of tickets.
+            // Update the GUI with the initial list of Ticket.
             UpdateTicketList();
 
             return grid;
         }
 
-        // Get a list of all cities that have cinemas in them.
+        // Get a list of all cities that have Cinema in them.
         private IEnumerable<string> GetCities()
         {
             var cities = new List<string>();
-            foreach (var city in database.Cinemas.Select(c => c.City))
+            using (database = new AppDbContext())
             {
-                if (!cities.Contains(city))
+                foreach (var city in database.Cinema.Select(c => c.City))
                 {
-                    cities.Add(city);
-                }               
+                    if (!cities.Contains(city))
+                    {
+                        cities.Add(city);
+                    }
+                }
+                return cities;
             }
-            return cities;
         }
 
-        // Get a list of all cinemas in the currently selected city.
+        // Get a list of all Cinema in the currently selected city.
         private IEnumerable<string> GetCinemasInSelectedCity()
         {
             using (database = new AppDbContext())
             {
                 string selectedCity = cityComboBox.SelectedItem.ToString();
-                List<string> cinemas = database.Cinemas.Where(c => c.City == selectedCity).Select(c => c.Name).ToList();
-                return cinemas;
+                List<string> Cinema = database.Cinema.Where(c => c.City == selectedCity).Select(c => c.Name).ToList();
+                return Cinema;
             }      
         }
         
@@ -291,7 +294,7 @@ namespace Assignment3
             }
         }
 
-        // Update the GUI with the screenings in the currently selected cinema.
+        // Update the GUI with the Screening in the currently selected cinema.
         private void UpdateScreeningList()
         {
             screeningPanel.Children.Clear();
@@ -299,98 +302,95 @@ namespace Assignment3
             {
                 return;
             }
-
-            string sql = @"
-                SELECT * FROM Screenings
-                JOIN Cinemas ON Screenings.CinemaID = Cinemas.ID
-                JOIN Movies ON Screenings.MovieID = Movies.ID
-                WHERE Cinemas.Name = @Cinema
-                ORDER BY Time";
-            using var command = new SqlCommand(sql, connection);
-            string cinema = (string)cinemaListBox.SelectedItem;
-            command.Parameters.AddWithValue("@Cinema", cinema);
-            using var reader = command.ExecuteReader();
-
-            // For each screening:
-            while (reader.Read())
+            using (database = new AppDbContext())
             {
-                // Create the button that will show all the info about the screening and let us buy a ticket for it.
-                var button = new Button
+                string selectedCinema = cinemaListBox.SelectedIndex.ToString();
+                List<Screening> screenings = database.Screening.Where(c => c.Cinema.Name == selectedCinema).Include(m => m.Movie).OrderBy(s => s.Time).ToList();
+
+                // For each screening:
+                foreach (var screening in screenings)
                 {
-                    Background = Brushes.Transparent,
-                    BorderThickness = new Thickness(0),
-                    Padding = spacing,
-                    Cursor = Cursors.Hand,
-                    HorizontalContentAlignment = HorizontalAlignment.Stretch
-                };
-                screeningPanel.Children.Add(button);
-                int screeningID = Convert.ToInt32(reader["ID"]);
+                    // Create the button that will show all the info about the screening and let us buy a ticket for it.
+                    var button = new Button
+                    {
+                        Background = Brushes.Transparent,
+                        BorderThickness = new Thickness(0),
+                        Padding = spacing,
+                        Cursor = Cursors.Hand,
+                        HorizontalContentAlignment = HorizontalAlignment.Stretch
+                    };
+                    screeningPanel.Children.Add(button);
+                    int screeningID = Convert.ToInt32(screening.ID);
 
-                // When we click a screening, buy a ticket for it and update the GUI with the latest list of tickets.
-                button.Click += (sender, e) =>
-                {
-                    BuyTicket(screeningID);
-                };
+                    // When we click a screening, buy a ticket for it and update the GUI with the latest list of Ticket.
+                    button.Click += (sender, e) =>
+                    {
+                        BuyTicket(screeningID);
+                    };
 
-                // The rest of this method is just creating the GUI element for the screening.
-                var grid = new Grid();
-                grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
-                grid.ColumnDefinitions.Add(new ColumnDefinition());
-                grid.RowDefinitions.Add(new RowDefinition());
-                grid.RowDefinitions.Add(new RowDefinition());
-                grid.RowDefinitions.Add(new RowDefinition());
-                button.Content = grid;
+                    // The rest of this method is just creating the GUI element for the screening.
+                    var grid = new Grid();
+                    grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+                    grid.ColumnDefinitions.Add(new ColumnDefinition());
+                    grid.RowDefinitions.Add(new RowDefinition());
+                    grid.RowDefinitions.Add(new RowDefinition());
+                    grid.RowDefinitions.Add(new RowDefinition());
+                    button.Content = grid;
 
-                var image = CreateImage(@"Posters\" + reader["PosterPath"]);
-                image.Width = 50;
-                image.Margin = spacing;
-                image.ToolTip = new ToolTip { Content = reader["Title"] };
-                AddToGrid(grid, image, 0, 0);
-                Grid.SetRowSpan(image, 3);
+                    var image = CreateImage(@"Posters\" + screening.Movie.PosterPath);
+                    image.Width = 50;
+                    image.Margin = spacing;
+                    image.ToolTip = new ToolTip { Content = screening.Movie.Title};
+                    AddToGrid(grid, image, 0, 0);
+                    Grid.SetRowSpan(image, 3);
 
-                var time = (TimeSpan)reader["Time"];
-                var timeHeading = new TextBlock
-                {
-                    Text = TimeSpanToString(time),
-                    Margin = spacing,
-                    FontFamily = new FontFamily("Corbel"),
-                    FontSize = 14,
-                    FontWeight = FontWeights.Bold,
-                    Foreground = Brushes.Yellow
-                };
-                AddToGrid(grid, timeHeading, 0, 1);
+                    var time = (TimeSpan)screening.Time;
+                    var timeHeading = new TextBlock
+                    {
+                        Text = TimeSpanToString(time),
+                        Margin = spacing,
+                        FontFamily = new FontFamily("Corbel"),
+                        FontSize = 14,
+                        FontWeight = FontWeights.Bold,
+                        Foreground = Brushes.Yellow
+                    };
+                    AddToGrid(grid, timeHeading, 0, 1);
 
-                var titleHeading = new TextBlock
-                {
-                    Text = Convert.ToString(reader["Title"]),
-                    Margin = spacing,
-                    FontFamily = mainFont,
-                    FontSize = 16,
-                    Foreground = Brushes.White,
-                    TextTrimming = TextTrimming.CharacterEllipsis
-                };
-                AddToGrid(grid, titleHeading, 1, 1);
+                    var titleHeading = new TextBlock
+                    {
+                        Text = Convert.ToString(screening.Movie.Title),
+                        Margin = spacing,
+                        FontFamily = mainFont,
+                        FontSize = 16,
+                        Foreground = Brushes.White,
+                        TextTrimming = TextTrimming.CharacterEllipsis
+                    };
+                    AddToGrid(grid, titleHeading, 1, 1);
 
-                var releaseDate = Convert.ToDateTime(reader["ReleaseDate"]);
-                int runtimeMinutes = Convert.ToInt32(reader["Runtime"]);
-                var runtime = TimeSpan.FromMinutes(runtimeMinutes);
-                string runtimeString = runtime.Hours + "h " + runtime.Minutes + "m";
-                var details = new TextBlock
-                {
-                    Text = "📆 " + releaseDate.Year + "     ⏳ " + runtimeString,
-                    Margin = spacing,
-                    FontFamily = new FontFamily("Corbel"),
-                    Foreground = Brushes.Silver
-                };
-                AddToGrid(grid, details, 2, 1);
+                    var releaseDate = Convert.ToDateTime(screening.Movie.Title);
+                    int runtimeMinutes = Convert.ToInt32(screening.Movie.Runtime);
+                    var runtime = TimeSpan.FromMinutes(runtimeMinutes);
+                    string runtimeString = runtime.Hours + "h " + runtime.Minutes + "m";
+                    var details = new TextBlock
+                    {
+                        Text = "📆 " + releaseDate.Year + "     ⏳ " + runtimeString,
+                        Margin = spacing,
+                        FontFamily = new FontFamily("Corbel"),
+                        Foreground = Brushes.Silver
+                    };
+                    AddToGrid(grid, details, 2, 1);
+                }
             }
         }
 
-        // Buy a ticket for the specified screening and update the GUI with the latest list of tickets.
+
+
+
+        // Buy a ticket for the specified screening and update the GUI with the latest list of Ticket.
         private void BuyTicket(int screeningID)
         {
             // First check if we already have a ticket for this screening.
-            string countSql = "SELECT COUNT(*) FROM Tickets WHERE ScreeningID = @ScreeningID";
+            string countSql = "SELECT COUNT(*) FROM Ticket WHERE ScreeningID = @ScreeningID";
             var countCommand = new SqlCommand(countSql, connection);
             countCommand.Parameters.AddWithValue("@ScreeningID", screeningID);
             int count = Convert.ToInt32(countCommand.ExecuteScalar());
@@ -398,7 +398,7 @@ namespace Assignment3
             // If we don't, add it.
             if (count == 0)
             {
-                string insertSql = "INSERT INTO Tickets (ScreeningID, TimePurchased) VALUES (@ScreeningID, @TimePurchased)";
+                string insertSql = "INSERT INTO Ticket (ScreeningID, TimePurchased) VALUES (@ScreeningID, @TimePurchased)";
                 using var insertCommand = new SqlCommand(insertSql, connection);
                 insertCommand.Parameters.AddWithValue("@ScreeningID", screeningID);
                 insertCommand.Parameters.AddWithValue("@TimePurchased", DateTime.Now);
@@ -408,17 +408,17 @@ namespace Assignment3
             }
         }
 
-        // Update the GUI with the latest list of tickets
+        // Update the GUI with the latest list of Ticket
         private void UpdateTicketList()
         {
             ticketPanel.Children.Clear();
 
             string sql = @"
-                SELECT * FROM Tickets
-                JOIN Screenings ON Tickets.ScreeningID = Screenings.ID
-                JOIN Movies ON Screenings.MovieID = Movies.ID
-                JOIN Cinemas ON Screenings.CinemaID = Cinemas.ID
-                ORDER BY Tickets.TimePurchased";
+                SELECT * FROM Ticket
+                JOIN Screening ON Ticket.ScreeningID = Screening.ID
+                JOIN Movie ON Screening.MovieID = Movie.ID
+                JOIN Cinema ON Screening.CinemaID = Cinema.ID
+                ORDER BY Ticket.TimePurchased";
             using var command = new SqlCommand(sql, connection);
             using var reader = command.ExecuteReader();
 
@@ -437,7 +437,7 @@ namespace Assignment3
                 ticketPanel.Children.Add(button);
                 int ticketID = Convert.ToInt32(reader["ID"]);
 
-                // When we click a ticket, remove it and update the GUI with the latest list of tickets.
+                // When we click a ticket, remove it and update the GUI with the latest list of Ticket.
                 button.Click += (sender, e) =>
                 {
                     RemoveTicket(ticketID);
@@ -485,10 +485,10 @@ namespace Assignment3
             }
         }
 
-        // Remove the ticket for the specified screening and update the GUI with the latest list of tickets.
+        // Remove the ticket for the specified screening and update the GUI with the latest list of Ticket.
         private void RemoveTicket(int ticketID)
         {
-            string deleteSql = "DELETE FROM Tickets WHERE ID = @TicketID";
+            string deleteSql = "DELETE FROM Ticket WHERE ID = @TicketID";
             var command = new SqlCommand(deleteSql, connection);
             command.Parameters.AddWithValue("@TicketID", ticketID);
             command.ExecuteNonQuery();

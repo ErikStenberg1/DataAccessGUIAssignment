@@ -17,12 +17,12 @@ namespace PopulateDatabase
             connection.Open();
 
             // Clear the database.
-            new SqlCommand("DELETE FROM Tickets", connection).ExecuteNonQuery();
-            new SqlCommand("DELETE FROM Screenings", connection).ExecuteNonQuery();
-            new SqlCommand("DELETE FROM Movies", connection).ExecuteNonQuery();
-            new SqlCommand("DELETE FROM Cinemas", connection).ExecuteNonQuery();
+            new SqlCommand("DELETE FROM Ticket", connection).ExecuteNonQuery();
+            new SqlCommand("DELETE FROM Screening", connection).ExecuteNonQuery();
+            new SqlCommand("DELETE FROM Movie", connection).ExecuteNonQuery();
+            new SqlCommand("DELETE FROM Cinema", connection).ExecuteNonQuery();
 
-            // Load movies.
+            // Load Movie.
             string[] movieLines = File.ReadAllLines("SampleMovies.csv");
             foreach (string line in movieLines)
             {
@@ -40,7 +40,7 @@ namespace PopulateDatabase
                 int runtime = int.Parse(runtimeString);
 
                 string sql = @"
-                    INSERT INTO Movies (Title, ReleaseDate, Runtime, PosterPath)
+                    INSERT INTO Movie (Title, ReleaseDate, Runtime, PosterPath)
                     VALUES (@Title, @ReleaseDate, @Runtime, @PosterPath)";
                 using var command = new SqlCommand(sql, connection);
                 command.Parameters.AddWithValue("@Title", title);
@@ -50,7 +50,7 @@ namespace PopulateDatabase
                 command.ExecuteNonQuery();
             }
 
-            // Load cinemas.
+            // Load Cinema.
             string[] cinemaLines = File.ReadAllLines("SampleCinemas.csv");
             foreach (string line in cinemaLines)
             {
@@ -59,7 +59,7 @@ namespace PopulateDatabase
                 string name= parts[1];
 
                 string sql = @"
-                    INSERT INTO Cinemas (City, Name)
+                    INSERT INTO Cinema (City, Name)
                     VALUES (@City, @Name)";
                 using var command = new SqlCommand(sql, connection);
                 command.Parameters.AddWithValue("@City", city);
@@ -67,12 +67,12 @@ namespace PopulateDatabase
                 command.ExecuteNonQuery();
             }
 
-            // Generate random screenings.
+            // Generate random Screening.
             
             // Get all cinema IDs.
             var cinemaIDs = new List<int>();
             {
-                string cinemaSql = "SELECT ID FROM Cinemas";
+                string cinemaSql = "SELECT ID FROM Cinema";
                 using var cinemaCommand = new SqlCommand(cinemaSql, connection);
                 using var cinemaReader = cinemaCommand.ExecuteReader();
                 while (cinemaReader.Read())
@@ -85,7 +85,7 @@ namespace PopulateDatabase
             // Get all movie IDs.
             var movieIDs = new List<int>();
             {
-                string movieSql = "SELECT ID FROM Movies";
+                string movieSql = "SELECT ID FROM Movie";
                 using var movieCommand = new SqlCommand(movieSql, connection);
                 using var movieReader = movieCommand.ExecuteReader();
                 while (movieReader.Read())
@@ -95,11 +95,11 @@ namespace PopulateDatabase
                 }
             }
 
-            // Create random screenings for each cinema.
+            // Create random Screening for each cinema.
             var random = new Random();
             foreach (int cinemaID in cinemaIDs)
             {
-                // Choose a random number of screenings.
+                // Choose a random number of Screening.
                 int numberOfScreenings = random.Next(2, 6);
                 foreach (int n in Enumerable.Range(0, numberOfScreenings)) {
                     // Pick a random movie.
@@ -111,9 +111,9 @@ namespace PopulateDatabase
                     double minute = minuteOptions[random.Next(minuteOptions.Length)];
                     var time = TimeSpan.FromHours(hour) + TimeSpan.FromMinutes(minute);
 
-                    // Insert the screening into the Screenings table.
+                    // Insert the screening into the Screening table.
                     string screeningSql = @"
-                        INSERT INTO Screenings (MovieID, CinemaID, Time)
+                        INSERT INTO Screening (MovieID, CinemaID, Time)
                         VALUES (@MovieID, @CinemaID, @Time)";
                     using var screeningCommand = new SqlCommand(screeningSql, connection);
                     screeningCommand.Parameters.AddWithValue("@MovieID", movieID);

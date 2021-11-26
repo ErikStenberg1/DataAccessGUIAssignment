@@ -8,7 +8,7 @@ namespace Assignment3.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Cinemas",
+                name: "Cinema",
                 columns: table => new
                 {
                     ID = table.Column<int>(type: "int", nullable: false)
@@ -22,7 +22,7 @@ namespace Assignment3.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Movies",
+                name: "Movie",
                 columns: table => new
                 {
                     ID = table.Column<int>(type: "int", nullable: false)
@@ -38,7 +38,7 @@ namespace Assignment3.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Screenings",
+                name: "Screening",
                 columns: table => new
                 {
                     ID = table.Column<int>(type: "int", nullable: false)
@@ -53,19 +53,19 @@ namespace Assignment3.Migrations
                     table.ForeignKey(
                         name: "FK_Screenings_Cinemas_CinemaID",
                         column: x => x.CinemaID,
-                        principalTable: "Cinemas",
+                        principalTable: "Cinema",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Screenings_Movies_MovieID",
                         column: x => x.MovieID,
-                        principalTable: "Movies",
+                        principalTable: "Movie",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Tickets",
+                name: "Ticket",
                 columns: table => new
                 {
                     ID = table.Column<int>(type: "int", nullable: false)
@@ -79,40 +79,40 @@ namespace Assignment3.Migrations
                     table.ForeignKey(
                         name: "FK_Tickets_Screenings_ScreeningID",
                         column: x => x.ScreeningID,
-                        principalTable: "Screenings",
+                        principalTable: "Screening",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Screenings_CinemaID",
-                table: "Screenings",
+                table: "Screening",
                 column: "CinemaID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Screenings_MovieID",
-                table: "Screenings",
+                table: "Screening",
                 column: "MovieID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Tickets_ScreeningID",
-                table: "Tickets",
+                table: "Ticket",
                 column: "ScreeningID");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Tickets");
+                name: "Ticket");
 
             migrationBuilder.DropTable(
-                name: "Screenings");
+                name: "Screening");
 
             migrationBuilder.DropTable(
-                name: "Cinemas");
+                name: "Cinema");
 
             migrationBuilder.DropTable(
-                name: "Movies");
+                name: "Movie");
         }
     }
 }
