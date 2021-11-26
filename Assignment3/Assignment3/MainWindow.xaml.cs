@@ -259,56 +259,29 @@ namespace Assignment3
         // Get a list of all cities that have cinemas in them.
         private IEnumerable<string> GetCities()
         {
-            string sql = @"
-                SELECT DISTINCT City
-                FROM Cinemas
-                ORDER BY City";
-            using var command = new SqlCommand(sql, connection);
-            using var reader = command.ExecuteReader();
             var cities = new List<string>();
-            while (reader.Read())
+            foreach (var city in database.Cinemas.Select(c => c.City))
             {
-                cities.Add(Convert.ToString(reader["City"]));
+                if (!cities.Contains(city))
+                {
+                    cities.Add(city);
+                }               
             }
             return cities;
         }
-        //// Get a list of all cities that have cinemas in them.
-        //private IEnumerable<string> GetCities()
-        //{
-        //    string sql = @"
-        //        SELECT DISTINCT City
-        //        FROM Cinemas
-        //        ORDER BY City";
-        //    using var command = new SqlCommand(sql, connection);
-        //    using var reader = command.ExecuteReader();
-        //    var cities = new List<string>();
-        //    while (reader.Read())
-        //    {
-        //        cities.Add(Convert.ToString(reader["City"]));
-        //    }
-        //    return cities;
-        //}
 
         // Get a list of all cinemas in the currently selected city.
         private IEnumerable<string> GetCinemasInSelectedCity()
         {
-            string sql = @"
-                SELECT * FROM Cinemas
-                WHERE City = @City
-                ORDER BY Name";
-            using var command = new SqlCommand(sql, connection);
-            string currentCity = (string)cityComboBox.SelectedItem;
-            command.Parameters.AddWithValue("@City", currentCity);
-            using var reader = command.ExecuteReader();
-            var cinemas = new List<string>();
-            while (reader.Read())
+            using (database = new AppDbContext())
             {
-                cinemas.Add(Convert.ToString(reader["Name"]));
-            }
-            return cinemas;
+                string selectedCity = cityComboBox.SelectedItem.ToString();
+                List<string> cinemas = database.Cinemas.Where(c => c.City == selectedCity).Select(c => c.Name).ToList();
+                return cinemas;
+            }      
         }
+        
 
-        // Update the GUI with the cinemas in the currently selected city.
         private void UpdateCinemaList()
         {
             cinemaListBox.Items.Clear();
