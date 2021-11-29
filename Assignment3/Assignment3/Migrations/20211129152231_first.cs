@@ -13,12 +13,12 @@ namespace Assignment3.Migrations
                 {
                     ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    City = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    City = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Cinemas", x => x.ID);
+                    table.PrimaryKey("PK_Cinema", x => x.ID);
                 });
 
             migrationBuilder.CreateTable(
@@ -27,14 +27,14 @@ namespace Assignment3.Migrations
                 {
                     ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Title = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Title = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     Runtime = table.Column<short>(type: "smallint", nullable: false),
-                    ReleaseDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    PosterPath = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    ReleaseDate = table.Column<DateTime>(type: "date", nullable: false),
+                    PosterPath = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Movies", x => x.ID);
+                    table.PrimaryKey("PK_Movie", x => x.ID);
                 });
 
             migrationBuilder.CreateTable(
@@ -44,24 +44,24 @@ namespace Assignment3.Migrations
                     ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Time = table.Column<TimeSpan>(type: "time", nullable: false),
-                    MovieID = table.Column<int>(type: "int", nullable: true),
-                    CinemaID = table.Column<int>(type: "int", nullable: true)
+                    MovieID = table.Column<int>(type: "int", nullable: false),
+                    CinemaID = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Screenings", x => x.ID);
+                    table.PrimaryKey("PK_Screening", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_Screenings_Cinemas_CinemaID",
+                        name: "FK_Screening_Cinema_CinemaID",
                         column: x => x.CinemaID,
                         principalTable: "Cinema",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Screenings_Movies_MovieID",
+                        name: "FK_Screening_Movie_MovieID",
                         column: x => x.MovieID,
                         principalTable: "Movie",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -70,32 +70,32 @@ namespace Assignment3.Migrations
                 {
                     ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ScreeningID = table.Column<int>(type: "int", nullable: true),
-                    TimePurchased = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    ScreeningID = table.Column<int>(type: "int", nullable: false),
+                    TimePurchased = table.Column<DateTime>(type: "datetime", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Tickets", x => x.ID);
+                    table.PrimaryKey("PK_Ticket", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_Tickets_Screenings_ScreeningID",
+                        name: "FK_Ticket_Screening_ScreeningID",
                         column: x => x.ScreeningID,
                         principalTable: "Screening",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Screenings_CinemaID",
+                name: "IX_Screening_CinemaID",
                 table: "Screening",
                 column: "CinemaID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Screenings_MovieID",
+                name: "IX_Screening_MovieID",
                 table: "Screening",
                 column: "MovieID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Tickets_ScreeningID",
+                name: "IX_Ticket_ScreeningID",
                 table: "Ticket",
                 column: "ScreeningID");
         }

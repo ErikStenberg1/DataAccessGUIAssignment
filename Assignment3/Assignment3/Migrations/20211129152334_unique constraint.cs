@@ -2,20 +2,21 @@
 
 namespace Assignment3.Migrations
 {
-    public partial class third : Migration
+    public partial class uniqueconstraint : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddUniqueConstraint(
-                name: "AK_Cinema_Name",
+            migrationBuilder.CreateIndex(
+                name: "IX_Cinema_Name",
                 table: "Cinema",
-                column: "Name");
+                column: "Name",
+                unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropUniqueConstraint(
-                name: "AK_Cinema_Name",
+            migrationBuilder.DropIndex(
+                name: "IX_Cinema_Name",
                 table: "Cinema");
         }
     }

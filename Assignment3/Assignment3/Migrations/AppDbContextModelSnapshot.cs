@@ -38,7 +38,8 @@ namespace Assignment3.Migrations
 
                     b.HasKey("ID");
 
-                    b.HasAlternateKey("Name");
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.ToTable("Cinema");
                 });
@@ -78,14 +79,14 @@ namespace Assignment3.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("CinemaID")
+                    b.Property<int>("CinemaID")
                         .HasColumnType("int");
 
-                    b.Property<int?>("MovieID")
+                    b.Property<int>("MovieID")
                         .HasColumnType("int");
 
                     b.Property<TimeSpan>("Time")
-                        .HasColumnType("time");
+                        .HasColumnType("time(0)");
 
                     b.HasKey("ID");
 
@@ -103,7 +104,7 @@ namespace Assignment3.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("ScreeningID")
+                    b.Property<int>("ScreeningID")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("TimePurchased")
@@ -120,11 +121,15 @@ namespace Assignment3.Migrations
                 {
                     b.HasOne("Assignment3.Cinema", "Cinema")
                         .WithMany()
-                        .HasForeignKey("CinemaID");
+                        .HasForeignKey("CinemaID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Assignment3.Movie", "Movie")
                         .WithMany()
-                        .HasForeignKey("MovieID");
+                        .HasForeignKey("MovieID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Cinema");
 
@@ -135,7 +140,9 @@ namespace Assignment3.Migrations
                 {
                     b.HasOne("Assignment3.Screening", "Screening")
                         .WithMany()
-                        .HasForeignKey("ScreeningID");
+                        .HasForeignKey("ScreeningID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Screening");
                 });

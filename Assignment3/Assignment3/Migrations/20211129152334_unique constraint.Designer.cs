@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Assignment3.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20211125181956_first")]
-    partial class first
+    [Migration("20211129152334_unique constraint")]
+    partial class uniqueconstraint
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -29,12 +29,19 @@ namespace Assignment3.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("City")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.HasKey("ID");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.ToTable("Cinema");
                 });
@@ -47,16 +54,20 @@ namespace Assignment3.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("PosterPath")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<DateTime>("ReleaseDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("date");
 
                     b.Property<short>("Runtime")
                         .HasColumnType("smallint");
 
                     b.Property<string>("Title")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.HasKey("ID");
 
@@ -70,10 +81,10 @@ namespace Assignment3.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("CinemaID")
+                    b.Property<int>("CinemaID")
                         .HasColumnType("int");
 
-                    b.Property<int?>("MovieID")
+                    b.Property<int>("MovieID")
                         .HasColumnType("int");
 
                     b.Property<TimeSpan>("Time")
@@ -95,11 +106,11 @@ namespace Assignment3.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("ScreeningID")
+                    b.Property<int>("ScreeningID")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("TimePurchased")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime");
 
                     b.HasKey("ID");
 
@@ -112,11 +123,15 @@ namespace Assignment3.Migrations
                 {
                     b.HasOne("Assignment3.Cinema", "Cinema")
                         .WithMany()
-                        .HasForeignKey("CinemaID");
+                        .HasForeignKey("CinemaID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Assignment3.Movie", "Movie")
                         .WithMany()
-                        .HasForeignKey("MovieID");
+                        .HasForeignKey("MovieID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Cinema");
 
@@ -127,7 +142,9 @@ namespace Assignment3.Migrations
                 {
                     b.HasOne("Assignment3.Screening", "Screening")
                         .WithMany()
-                        .HasForeignKey("ScreeningID");
+                        .HasForeignKey("ScreeningID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Screening");
                 });
